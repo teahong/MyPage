@@ -347,8 +347,7 @@
   width: auto;
 }
 
-.field__input[aria-invalid='true'],
-.field__file[aria-invalid='true'] {
+.field__input[aria-invalid='true'] {
   border-color: var(--color-danger);
 }
 
@@ -366,10 +365,6 @@
   object-fit: cover;
 }
 
-.field__file {
-  min-height: var(--touch-target);
-  font-size: var(--font-size-sub);
-}
 
 .work-form__actions {
   display: flex;
@@ -382,4 +377,82 @@
   opacity: 0.6;
   transform: none;
   box-shadow: none;
+}
+
+.field__label--sub {
+  margin-top: 4px;
+  font-size: var(--font-size-sub);
+}
+
+/* 카테고리 필터. 모바일에서는 줄바꿈 없이 가로로 스크롤한다 */
+.category-filter {
+  margin-bottom: 24px;
+}
+
+.category-filter__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.category-filter__button {
+  min-height: var(--touch-target);
+  padding: 0 18px;
+  border: var(--outline-width) solid var(--color-outline);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.category-filter__button:hover {
+  background: var(--color-bg-soft);
+}
+
+.category-filter__button[aria-pressed='true'] {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+@media (max-width: 639px) {
+  .category-filter {
+    margin-right: calc(var(--page-gutter) * -1);
+    margin-left: calc(var(--page-gutter) * -1);
+  }
+
+  .category-filter__list {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 0 var(--page-gutter) 4px;
+    scrollbar-width: none;
+  }
+
+  .category-filter__list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .category-filter__list > li {
+    flex: none;
+  }
+}
+
+.field__preview-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--color-text-sub);
+  font-size: var(--font-size-sub);
+}
+
+.field__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
 }

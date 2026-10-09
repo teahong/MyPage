@@ -4,7 +4,7 @@ insert into public.works (title, description, category, link_url, thumbnail_url,
 values (
   '테스트 작업물',
   '목록에 카드가 나오는지 확인하는 테스트 데이터예요.',
-  '앱',
+  '소프트웨어',
   'https://example.com',
   'https://picsum.photos/seed/archive-test/1600/1000',
   '',

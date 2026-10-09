@@ -42,10 +42,15 @@
 - 포인트 컬러 파생 토큰: 크림 배경 위 글자는 `--color-accent-text`, 포인트 컬러로 채운 버튼 위 글자는 `--color-on-accent` (대비 4.5:1 확보).
 - 관리자 이메일: `.env`, `schema.sql`의 `is_admin()`, 대시보드 관리자 계정에 같은 값을 넣는다. 저장소의 SQL에는 자리표시 문자열을 둔다. 메일을 보내지 않으므로 실제로 받는 주소일 필요는 없다.
 - 카테고리: `name`이 기본키. 대소문자 무시 중복은 DB 유니크 인덱스(`lower(name)`)가 막는다. 기본 3개는 `schema.sql`에서 미리 넣는다.
+- 기본 카테고리는 "발표 자료", "소프트웨어", "출판물" (2026-10-09 사용자 결정. 문서의 "앱"→"소프트웨어", "웹사이트"→"출판물").
+- 새 카테고리는 작업물을 저장할 때 같이 만든다 (카테고리 → 썸네일 → 작업물 순서).
 - `works.category`는 `categories.name` 외래키.
 - 새 작업물은 `crypto.randomUUID()`로 id를 먼저 만들어 썸네일 경로 `{id}-{timestamp}.{ext}`(버킷 `thumbnails`)와 행 id에 같이 쓴다.
 - 정렬(date desc, created_at desc)은 DB 쿼리에서 한다.
 - 썸네일 리사이즈 결과: png는 png 유지(투명 배경), 그 외는 webp.
+- 썸네일은 필수가 아니다 (2026-10-09 사용자 결정, 문서 3.7 "썸네일 필수" 대체). 저장할 때 우선순위: 직접 올린 이미지 → 링크의 대표 이미지(og:image 등) → 제목 카드. 어느 경우든 리사이즈해서 우리 Storage에 올린다 (외부 이미지를 직접 걸지 않음). 폼에 "링크에서 가져오기"로 미리 볼 수 있다.
+- 링크 대표 이미지는 Edge Function `supabase/functions/fetch-og-image`가 가져온다 (브라우저는 CORS로 못 읽음). 관리자만 호출 가능(함수 안에서 `is_admin()` 확인), `--no-verify-jwt`로 배포. 내부망 주소 차단, HTML 앞 2MB만 읽음. YouTube는 서버 IP에서 페이지를 막아서(429) 영상 ID로 `i.ytimg.com` 썸네일을 바로 받는다. 배포: `npx supabase functions deploy fetch-og-image --project-ref ddfywsuhaalrapvumfnd --no-verify-jwt --use-api` (CLI 로그인은 사용자가 별도 터미널에서 `npx.cmd supabase login`).
+- 제목 카드: `utils/titleCard.js`가 캔버스로 1600×1000 png를 만든다. 색은 `tokens.css`의 `--cover-1..3-*`, 제목 해시로 고른다.
 - 수정 시 기존 썸네일 삭제가 실패하면 콘솔 기록 후 진행.
 - 필드 검증(길이, URL 형식)은 앱과 DB check 제약 양쪽에 둔다.
 - 날짜는 Postgres `date` 타입. 앱에서는 `'YYYY-MM-DD'` 문자열로 다루고 `YYYY.MM.DD`로 표시한다.

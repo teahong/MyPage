@@ -54,3 +54,16 @@ a {
   margin: 0 auto;
   padding: 0 var(--page-gutter);
 }
+
+/* 화면에는 숨기고 보조기기에는 남긴다 */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

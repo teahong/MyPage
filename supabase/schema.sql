@@ -36,8 +36,8 @@ create unique index if not exists categories_name_lower_key on public.categories
 
 insert into public.categories (name, is_default) values
   ('발표 자료', true),
-  ('앱', true),
-  ('웹사이트', true)
+  ('소프트웨어', true),
+  ('출판물', true)
 on conflict (name) do nothing;
 
 -- ─────────────────────────────────────────────
