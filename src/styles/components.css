@@ -594,3 +594,15 @@
   right: 8px;
   transform: translateY(-50%);
 }
+
+/* 무한 스크롤. 끝 표시 요소가 화면 가까이 오면 다음 12건을 보여준다 */
+.list-sentinel {
+  height: 1px;
+}
+
+.list-end {
+  margin-top: var(--section-gap);
+  color: var(--color-text-sub);
+  font-size: var(--font-size-sub);
+  text-align: center;
+}

@@ -6,6 +6,7 @@ import SearchBar from '../components/SearchBar.jsx';
 import WorkGrid from '../components/WorkGrid.jsx';
 import useAuth from '../hooks/useAuth.js';
 import useDocumentTitle from '../hooks/useDocumentTitle.js';
+import useInfiniteScroll from '../hooks/useInfiniteScroll.js';
 import useWorks from '../hooks/useWorks.js';
 import { fetchCategories } from '../services/categoriesService.js';
 import searchWorks from '../utils/searchWorks.js';
@@ -43,6 +44,11 @@ export default function HomePage() {
   // 검색어와 카테고리는 함께 적용한다 (AND).
   const inCategory = selected ? works.filter((work) => work.category === selected) : works;
   const visibleWorks = searchWorks(inCategory, query);
+  // 필터나 검색어가 바뀌면 다시 12건부터 보여준다.
+  const { visibleCount, hasMore, sentinelRef } = useInfiniteScroll(
+    visibleWorks.length,
+    JSON.stringify([selected, query]),
+  );
 
   // 검색어, 필터는 주소에 담아 새로고침하거나 상세에서 돌아와도 유지한다.
   function setParam(name, value) {
@@ -92,7 +98,16 @@ export default function HomePage() {
           }
         />
       )}
-      {status === 'ready' && visibleWorks.length > 0 && <WorkGrid works={visibleWorks} />}
+      {status === 'ready' && visibleWorks.length > 0 && (
+        <>
+          <WorkGrid works={visibleWorks.slice(0, visibleCount)} />
+          {hasMore ? (
+            <div ref={sentinelRef} className="list-sentinel" aria-hidden="true" />
+          ) : (
+            <p className="list-end">마지막 작업물이에요</p>
+          )}
+        </>
+      )}
     </main>
   );
 }
