@@ -1067,3 +1067,75 @@
   flex: 1;
   min-width: 0;
 }
+
+/* 헤더 오른쪽 버튼. 같은 높이, 같은 둥근 모양, 아이콘 + 글자 */
+.header-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: var(--touch-target);
+  padding: 0 16px 0 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: var(--font-size-sub);
+  font-weight: 700;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform var(--duration-hover) ease-out,
+    box-shadow var(--duration-hover) ease-out,
+    border-color var(--duration-hover) ease-out;
+}
+
+.header-action:hover {
+  border-color: var(--color-accent-text);
+  box-shadow: var(--shadow-control);
+  transform: translateY(-1px);
+}
+
+.header-action:active {
+  box-shadow: none;
+  transform: none;
+}
+
+/* 지금 열려 있는 화면의 버튼 */
+.header-action[aria-current='page'] {
+  border-color: var(--color-accent-weak);
+  background: var(--color-accent-weak);
+  color: var(--color-accent-text);
+}
+
+.header-action--primary,
+.header-action--primary[aria-current='page'] {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.header-action__icon {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header-action,
+  .header-action:hover {
+    transition: none;
+    transform: none;
+  }
+}
+
+@media (max-width: 639px) {
+  .header-action {
+    padding: 0 12px 0 10px;
+  }
+}
