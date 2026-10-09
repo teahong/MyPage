@@ -1,0 +1,51 @@
+:root {
+  /* 색상 */
+  --color-bg: #ffffff;
+  --color-bg-soft: #f6f7f8;
+  --color-text: #1b1d1f;
+  --color-text-sub: #6b7280;
+  --color-border: #e5e7eb;
+  --color-accent: #ff7a45; /* 임시. 캐릭터 확인 후 확정 */
+  --color-accent-weak: #fff1ea; /* 임시 */
+  /* 포인트 컬러를 흰 배경 위 글자색(링크 등)으로 쓸 때. 같은 색상의 진한 단계로 대비 4.5:1 이상 확보 */
+  --color-accent-text: #b54513; /* 임시 */
+  /* 포인트 컬러로 채운 버튼 위 글자색 */
+  --color-on-accent: #1b1d1f;
+  --color-danger: #d92d20;
+
+  /* 글꼴 */
+  --font-family: 'Pretendard Variable', Pretendard, system-ui, sans-serif;
+  --font-size-title: 28px;
+  --font-size-card-title: 18px;
+  --font-size-body: 16px;
+  --font-size-sub: 14px;
+  --line-height-body: 1.6;
+
+  /* 레이아웃 */
+  --content-max-width: 1120px;
+  --page-gutter: 32px;
+  --card-gap: 24px;
+  --section-gap: 48px;
+  --radius-card: 16px;
+  --touch-target: 44px;
+  --character-header: 56px;
+  --character-message: 160px;
+
+  /* 그림자. 카드 호버와 대화창에만 쓴다 */
+  --shadow-hover: 0 8px 20px rgb(27 29 31 / 0.08);
+  --shadow-dialog: 0 16px 40px rgb(27 29 31 / 0.16);
+
+  /* 대화창 뒤 배경 */
+  --color-backdrop: rgb(27 29 31 / 0.4);
+
+  /* 움직임 */
+  --duration-hover: 150ms;
+}
+
+@media (max-width: 639px) {
+  :root {
+    --page-gutter: 16px;
+    --card-gap: 16px;
+    --character-header: 44px;
+  }
+}

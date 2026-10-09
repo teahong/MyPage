@@ -1,0 +1,271 @@
+/* 헤더 */
+.header {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: calc(var(--character-header) + 24px);
+}
+
+.header__intro {
+  display: flex;
+  color: inherit;
+  text-decoration: none;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.header__character {
+  flex: none;
+  width: auto;
+  height: var(--character-header);
+}
+
+.header__greeting {
+  font-size: var(--font-size-body);
+  font-weight: 600;
+  word-break: keep-all;
+}
+
+.header__actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 페이지 */
+.page {
+  padding-top: 32px;
+  padding-bottom: var(--section-gap);
+}
+
+/* 카드 그리드 */
+.work-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--card-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (max-width: 1023px) {
+  .work-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 639px) {
+  .work-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* 작업물 카드 */
+.work-card {
+  height: 100%;
+  border-radius: var(--radius-card);
+  background: var(--color-bg);
+  transition:
+    transform var(--duration-hover) ease-out,
+    box-shadow var(--duration-hover) ease-out;
+}
+
+.work-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work-card:hover {
+    transform: none;
+  }
+}
+
+.work-card__thumb {
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  background: var(--color-bg-soft);
+}
+
+.work-card__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.work-card__body {
+  padding: 12px 4px 8px;
+}
+
+.work-card__title {
+  font-size: var(--font-size-card-title);
+  font-weight: 700;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.work-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  color: var(--color-text-sub);
+  font-size: var(--font-size-sub);
+}
+
+.work-card__category {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--color-accent-weak);
+  color: var(--color-accent-text);
+  font-weight: 600;
+}
+
+/* 버튼 */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--touch-target);
+  min-height: var(--touch-target);
+  padding: 0 20px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-bg);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.button:hover {
+  background: var(--color-bg-soft);
+}
+
+/* 캐릭터 안내 (로딩, 빈 화면, 오류) */
+.character-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: var(--section-gap) 0;
+  text-align: center;
+}
+
+.character-message__image {
+  width: auto;
+  height: var(--character-message);
+}
+
+.character-message__text {
+  color: var(--color-text-sub);
+}
+
+a.button {
+  text-decoration: none;
+  color: var(--color-text);
+}
+
+.button--primary,
+a.button--primary {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.button--primary:hover {
+  background: var(--color-accent);
+  filter: brightness(0.95);
+}
+
+.text-button {
+  min-height: var(--touch-target);
+  padding: 0 8px;
+  border: 0;
+  background: none;
+  color: var(--color-text-sub);
+  font-size: var(--font-size-sub);
+  cursor: pointer;
+}
+
+.text-button:hover {
+  color: var(--color-text);
+}
+
+/* 대화창 */
+.dialog {
+  width: min(360px, calc(100% - var(--page-gutter) * 2));
+  padding: 24px;
+  border: 0;
+  border-radius: var(--radius-card);
+  background: var(--color-bg);
+  color: var(--color-text);
+  box-shadow: var(--shadow-dialog);
+}
+
+.dialog::backdrop {
+  background: var(--color-backdrop);
+}
+
+.dialog__title {
+  font-size: var(--font-size-card-title);
+  font-weight: 700;
+}
+
+.dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* PIN 입력 */
+.pin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pin-form__label {
+  color: var(--color-text-sub);
+  font-size: var(--font-size-sub);
+}
+
+.pin-form__input {
+  width: 100%;
+  min-height: var(--touch-target);
+  padding: 0 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-bg-soft);
+  font-size: 24px;
+  letter-spacing: 0.4em;
+  text-align: center;
+}
+
+.pin-form__input[aria-invalid='true'] {
+  border-color: var(--color-danger);
+}
+
+/* Turnstile 위젯 자리. 위젯이 뜰 때 아래 내용이 밀리지 않게 높이를 잡아 둔다 */
+.turnstile {
+  min-height: 65px;
+}
+
+.form-hint,
+.form-error {
+  min-height: 1.6em;
+  font-size: var(--font-size-sub);
+}
+
+.form-hint {
+  color: var(--color-text-sub);
+}
+
+.form-error {
+  color: var(--color-danger);
+}
