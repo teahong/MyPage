@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router';
 import CharacterMessage from '../components/CharacterMessage.jsx';
+import CategoryLabel from '../components/CategoryLabel.jsx';
 import DeleteWorkDialog from '../components/DeleteWorkDialog.jsx';
 import useAuth from '../hooks/useAuth.js';
+import useCategories from '../hooks/useCategories.js';
 import useDocumentTitle from '../hooks/useDocumentTitle.js';
 import { SAVE_ERROR_MESSAGES, removeWork } from '../services/workActions.js';
 import { fetchWork } from '../services/worksService.js';
@@ -13,6 +15,7 @@ export default function WorkDetailPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const { isAdmin } = useAuth();
+  const categories = useCategories();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [work, setWork] = useState(null);
   const [status, setStatus] = useState('loading'); // loading | ready | missing | error
@@ -101,7 +104,7 @@ export default function WorkDetailPage() {
           <img src={work.thumbnailUrl} alt="" />
         </a>
         <p className="work-card__meta">
-          <span className="work-card__category">{work.category}</span>
+          <CategoryLabel name={work.category} categories={categories} />
           <time dateTime={work.date}>{formatDate(work.date)}</time>
         </p>
         <h1 className="work-detail__title">{work.title}</h1>

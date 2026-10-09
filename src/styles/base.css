@@ -67,3 +67,28 @@ a {
   white-space: nowrap;
   border: 0;
 }
+
+/* 페이지 뒤에 흐리게 깔리는 캐릭터. 오른쪽 아래에 크게 두고, 그림의 네모난 배경이
+   보이지 않도록 가장자리를 둥글게 흐린다. 스크롤해도 제자리에 있다. */
+body::before {
+  content: '';
+  position: fixed;
+  right: -6vw;
+  bottom: -10vh;
+  z-index: -1;
+  width: min(62vw, 760px);
+  aspect-ratio: 395 / 487;
+  background: url('../image/profile.png') center / cover no-repeat;
+  filter: blur(var(--backdrop-character-blur));
+  opacity: var(--backdrop-character-opacity);
+  -webkit-mask-image: radial-gradient(closest-side, #000 55%, transparent);
+  mask-image: radial-gradient(closest-side, #000 55%, transparent);
+  pointer-events: none;
+}
+
+@media (max-width: 639px) {
+  body::before {
+    right: -20vw;
+    width: 110vw;
+  }
+}

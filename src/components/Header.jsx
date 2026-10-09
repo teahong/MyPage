@@ -5,7 +5,7 @@ import useAuth from '../hooks/useAuth.js';
 import { signOut } from '../services/authService.js';
 import PinDialog from './PinDialog.jsx';
 
-export const GREETING = '안녕하세요, 제 작업물을 모아뒀어요';
+export const GREETING = '안녕하세요, 뽀글쌤입니다.';
 
 export default function Header() {
   const { isAdmin, ready } = useAuth();

@@ -1,22 +1,40 @@
 /* 색상은 캐릭터 그림(src/image/profile.png)에서 뽑았다.
-   크림색 종이 배경, 칠판 청록, 굵은 검은 외곽선이 기준이다. */
+   따뜻한 크림색 종이 배경과 칠판 청록이 기준이다.
+   굵은 먹색 외곽선은 촌스러워 보인다는 의견에 따라 옅은 선과 부드러운 그림자로 바꿨다. */
 :root {
   /* 색상 */
-  --color-bg: #f8eddc; /* 그림 배경의 크림색 종이 */
-  --color-bg-soft: #f1f5dc; /* 셔츠의 연두빛 크림. 입력칸 배경 */
-  --color-surface: #fffbf3; /* 대화창, 버튼처럼 배경 위에 올라오는 면 */
-  --color-text: #1a1a18; /* 외곽선 먹색 */
-  --color-text-sub: #6b6257; /* 크림 배경 위 대비 5.17:1 */
-  --color-border: #e2d4bc; /* 옅은 구분선 */
-  --color-outline: #1a1a18; /* 만화풍 굵은 외곽선 */
+  --color-bg: #faf4ea; /* 그림 배경의 크림색을 조금 밝게 */
+  --color-bg-soft: #f3efe3; /* 썸네일 자리, 빈 미리보기 */
+  --color-surface: #fffdf8; /* 입력칸, 버튼, 대화창처럼 배경 위에 올라오는 면 */
+  --color-text: #1a1a18;
+  --color-text-sub: #6b6257; /* 배경 위 대비 5.47:1 */
+  --color-border: #e8dcc8; /* 헤더 아래처럼 옅은 구분선 */
+  --color-outline: rgb(26 26 24 / 0.1); /* 썸네일, 대화창 테두리. 거의 보이지 않는 선 */
+  --color-control-border: #8f8270; /* 입력칸, 버튼 테두리. 배경 위 대비 3.43:1 (구성요소 기준 3:1) */
   --color-accent: #66b3b4; /* 칠판 청록 */
   --color-accent-weak: #d8eeee;
-  /* 포인트 컬러를 크림 배경 위 글자색(링크 등)으로 쓸 때. 대비 5.37:1 */
+  /* 포인트 컬러를 배경 위 글자색(링크 등)으로 쓸 때. 대비 5.69:1 */
   --color-accent-text: #1e6b6c;
   /* 포인트 컬러로 채운 버튼 위 글자색. 대비 7.2:1 */
   --color-on-accent: #1a1a18;
-  --color-danger: #b42335; /* 크림 배경 위 대비 5.61:1 */
+  --color-danger: #b42335; /* 배경 위 대비 5.94:1 */
   --color-on-danger: #fffbf3; /* 위험 색으로 채운 버튼 위 글자색 */
+
+  /* 카테고리 색. 그림 속 색에서 뽑았고 글자 대비는 모두 5:1 이상 (utils/categoryTone.js) */
+  --category-1-bg: #d8eeee; /* 칠판 청록 */
+  --category-1-text: #1e6b6c;
+  --category-2-bg: #fbe1e6; /* 넥타이 분홍 */
+  --category-2-text: #a32e48;
+  --category-3-bg: #dfe5f1; /* 바지 남색 */
+  --category-3-text: #34496f;
+  --category-4-bg: #fde8cc; /* 피부 살구 */
+  --category-4-text: #8a4f14;
+  --category-5-bg: #e5eecb; /* 셔츠 연두 */
+  --category-5-text: #4b6120;
+  --category-6-bg: #dbedfb; /* 안경 하늘 */
+  --category-6-text: #235a86;
+  --category-7-bg: #efe2c6; /* 칠판 테두리 나무 */
+  --category-7-text: #6b5020;
 
   /* 썸네일이 없을 때 만드는 제목 카드 (utils/titleCard.js). 글자 대비 4.5:1 이상 */
   --cover-1-bg: #66b3b4; /* 칠판 청록 */
@@ -26,8 +44,13 @@
   --cover-3-bg: #1e6b6c; /* 진한 청록 */
   --cover-3-text: #fffbf3;
 
+  /* 페이지 뒤에 흐리게 깔리는 캐릭터 */
+  --backdrop-character-opacity: 0.14;
+  --backdrop-character-blur: 10px;
+
   /* 글꼴 */
   --font-family: 'Pretendard Variable', Pretendard, system-ui, sans-serif;
+  --font-size-hero: 44px; /* 첫 페이지 이름 */
   --font-size-title: 28px;
   --font-size-card-title: 18px;
   --font-size-body: 16px;
@@ -41,15 +64,17 @@
   --section-gap: 48px;
   --radius-card: 16px;
   --radius-control: 12px;
-  --outline-width: 2px;
+  --outline-width: 1px;
   --touch-target: 44px;
+  /* 목차로 이동했을 때 섹션 위 여백. 좁은 화면은 위에 붙는 목차 줄 높이만큼 */
+  --section-scroll-margin: 0px;
   --character-header: 56px;
   --character-message: 160px;
 
-  /* 그림자. 번지지 않는 만화풍 그림자를 카드 호버, 버튼, 대화창에만 쓴다 */
-  --shadow-hover: 4px 4px 0 var(--color-outline);
-  --shadow-control: 2px 2px 0 var(--color-outline);
-  --shadow-dialog: 6px 6px 0 var(--color-outline);
+  /* 그림자. 카드 호버, 버튼 호버, 대화창에만 쓴다 */
+  --shadow-hover: 0 14px 32px rgb(26 26 24 / 0.12);
+  --shadow-control: 0 4px 12px rgb(26 26 24 / 0.1);
+  --shadow-dialog: 0 24px 64px rgb(26 26 24 / 0.22);
 
   /* 대화창 뒤 배경 */
   --color-backdrop: rgb(26 26 24 / 0.45);
@@ -58,10 +83,17 @@
   --duration-hover: 150ms;
 }
 
+@media (max-width: 1023px) {
+  :root {
+    --section-scroll-margin: 64px;
+  }
+}
+
 @media (max-width: 639px) {
   :root {
     --page-gutter: 16px;
     --card-gap: 16px;
     --character-header: 44px;
+    --font-size-hero: 32px;
   }
 }

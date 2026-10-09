@@ -1,8 +1,9 @@
 import { Link, useLocation } from 'react-router';
 import formatDate from '../utils/formatDate.js';
+import CategoryLabel from './CategoryLabel.jsx';
 
 // 카드 전체가 상세 페이지 링크다. 지금의 검색어, 필터를 넘겨서 "목록으로"가 그 상태로 돌아가게 한다.
-export default function WorkCard({ work }) {
+export default function WorkCard({ work, categories }) {
   const { search } = useLocation();
   return (
     <Link to={`/work/${work.id}`} state={{ listSearch: search }} className="work-card">
@@ -12,7 +13,7 @@ export default function WorkCard({ work }) {
       <div className="work-card__body">
         <h2 className="work-card__title">{work.title}</h2>
         <p className="work-card__meta">
-          <span className="work-card__category">{work.category}</span>
+          <CategoryLabel name={work.category} categories={categories} />
           <time dateTime={work.date}>{formatDate(work.date)}</time>
         </p>
       </div>

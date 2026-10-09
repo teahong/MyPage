@@ -1,6 +1,6 @@
 /* 헤더 */
 .header {
-  border-bottom: var(--outline-width) solid var(--color-outline);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .header__inner {
@@ -28,9 +28,10 @@
   width: var(--character-header);
   height: var(--character-header);
   overflow: hidden;
-  border: var(--outline-width) solid var(--color-outline);
+  border: 2px solid var(--color-surface);
   border-radius: 50%;
   background: var(--color-bg);
+  box-shadow: 0 0 0 1px var(--color-outline);
 }
 
 .header__avatar img {
@@ -60,6 +61,76 @@
   padding-bottom: var(--section-gap);
 }
 
+.page--narrow {
+  max-width: calc(640px + var(--page-gutter) * 2);
+}
+
+.page--detail {
+  max-width: calc(880px + var(--page-gutter) * 2);
+}
+
+.page__title {
+  margin-bottom: 32px;
+  font-size: var(--font-size-title);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+/* 카테고리 색. tone-0은 카테고리 목록을 불러오기 전의 중립색, tone-all은 "전체" */
+.tone-0 {
+  --tone-bg: var(--color-bg-soft);
+  --tone-text: var(--color-text-sub);
+}
+
+.tone-all {
+  --tone-bg: var(--color-accent);
+  --tone-text: var(--color-on-accent);
+}
+
+.tone-1 {
+  --tone-bg: var(--category-1-bg);
+  --tone-text: var(--category-1-text);
+}
+
+.tone-2 {
+  --tone-bg: var(--category-2-bg);
+  --tone-text: var(--category-2-text);
+}
+
+.tone-3 {
+  --tone-bg: var(--category-3-bg);
+  --tone-text: var(--category-3-text);
+}
+
+.tone-4 {
+  --tone-bg: var(--category-4-bg);
+  --tone-text: var(--category-4-text);
+}
+
+.tone-5 {
+  --tone-bg: var(--category-5-bg);
+  --tone-text: var(--category-5-text);
+}
+
+.tone-6 {
+  --tone-bg: var(--category-6-bg);
+  --tone-text: var(--category-6-text);
+}
+
+.tone-7 {
+  --tone-bg: var(--category-7-bg);
+  --tone-text: var(--category-7-text);
+}
+
+.category-label {
+  padding: 1px 10px;
+  border-radius: 999px;
+  background: var(--tone-bg);
+  color: var(--tone-text);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
 /* 카드 그리드 */
 .work-grid {
   display: grid;
@@ -82,7 +153,7 @@
   }
 }
 
-/* 작업물 카드. 썸네일이 주인공이라 카드 자체에는 면을 깔지 않고 썸네일에만 외곽선을 두른다 */
+/* 작업물 카드. 썸네일이 주인공이라 카드 자체에는 면을 깔지 않는다 */
 .work-card {
   display: block;
   height: 100%;
@@ -91,32 +162,45 @@
   text-decoration: none;
 }
 
-.work-card__thumb {
+.work-card__thumb,
+.work-detail__thumb,
+.field__preview {
+  display: block;
   aspect-ratio: 16 / 10;
   overflow: hidden;
-  border: var(--outline-width) solid var(--color-outline);
   border-radius: var(--radius-card);
   background: var(--color-bg-soft);
+  box-shadow: 0 0 0 1px var(--color-outline);
+}
+
+.work-card__thumb img,
+.work-detail__thumb img,
+.field__preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.work-card__thumb,
+.work-detail__thumb {
   transition:
     transform var(--duration-hover) ease-out,
     box-shadow var(--duration-hover) ease-out;
 }
 
-.work-card:hover .work-card__thumb {
+.work-card:hover .work-card__thumb,
+.work-detail__thumb:hover {
   transform: translateY(-4px);
-  box-shadow: var(--shadow-hover);
+  box-shadow:
+    0 0 0 1px var(--color-outline),
+    var(--shadow-hover);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .work-card:hover .work-card__thumb {
+  .work-card:hover .work-card__thumb,
+  .work-detail__thumb:hover {
     transform: none;
   }
-}
-
-.work-card__thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 
 .work-card__body {
@@ -134,17 +218,9 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-top: 4px;
+  margin-top: 6px;
   color: var(--color-text-sub);
   font-size: var(--font-size-sub);
-}
-
-.work-card__category {
-  padding: 1px 8px;
-  border-radius: 999px;
-  background: var(--color-accent-weak);
-  color: var(--color-accent-text);
-  font-weight: 700;
 }
 
 /* 버튼 */
@@ -155,7 +231,7 @@
   min-width: var(--touch-target);
   min-height: var(--touch-target);
   padding: 0 20px;
-  border: var(--outline-width) solid var(--color-outline);
+  border: 1px solid var(--color-control-border);
   border-radius: var(--radius-control);
   background: var(--color-surface);
   color: var(--color-text);
@@ -168,7 +244,7 @@
 }
 
 .button:hover {
-  transform: translate(-2px, -2px);
+  transform: translateY(-1px);
   box-shadow: var(--shadow-control);
 }
 
@@ -183,9 +259,29 @@
   }
 }
 
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none;
+  box-shadow: none;
+}
+
 .button--primary {
+  border-color: var(--color-accent);
   background: var(--color-accent);
   color: var(--color-on-accent);
+}
+
+/* 위험한 작업 버튼. 상세의 "삭제"는 테두리만, 확인 창의 "삭제"는 채운다 */
+.button--danger-outline {
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+.button--danger {
+  border-color: var(--color-danger);
+  background: var(--color-danger);
+  color: var(--color-on-danger);
 }
 
 .text-button {
@@ -205,7 +301,7 @@
   text-underline-offset: 3px;
 }
 
-/* 캐릭터 안내 (로딩, 빈 화면, 오류). 그림을 만화 칸처럼 테두리 안에 넣는다 */
+/* 캐릭터 안내 (로딩, 빈 화면, 오류) */
 .character-message {
   display: flex;
   flex-direction: column;
@@ -218,8 +314,8 @@
 .character-message__image {
   width: auto;
   height: var(--character-message);
-  border: var(--outline-width) solid var(--color-outline);
   border-radius: var(--radius-card);
+  box-shadow: 0 0 0 1px var(--color-outline);
 }
 
 .character-message__text {
@@ -231,7 +327,7 @@
 .dialog {
   width: min(360px, calc(100% - var(--page-gutter) * 2));
   padding: 24px;
-  border: var(--outline-width) solid var(--color-outline);
+  border: 0;
   border-radius: var(--radius-card);
   background: var(--color-surface);
   color: var(--color-text);
@@ -247,9 +343,41 @@
   font-weight: 700;
 }
 
+.dialog__message {
+  font-weight: 700;
+  word-break: keep-all;
+}
+
 .dialog__actions {
   display: flex;
   justify-content: flex-end;
+  gap: 8px;
+}
+
+.dialog .dialog__actions {
+  margin-top: 12px;
+}
+
+/* 입력칸 공통 */
+.field__input,
+.pin-form__input,
+.search-bar__input {
+  width: 100%;
+  min-height: var(--touch-target);
+  border: 1px solid var(--color-control-border);
+  background: var(--color-surface);
+  transition: border-color var(--duration-hover) ease-out;
+}
+
+.field__input:focus,
+.pin-form__input:focus,
+.search-bar__input:focus {
+  border-color: var(--color-accent-text);
+}
+
+.field__input[aria-invalid='true'],
+.pin-form__input[aria-invalid='true'] {
+  border-color: var(--color-danger);
 }
 
 /* PIN 입력 */
@@ -265,19 +393,11 @@
 }
 
 .pin-form__input {
-  width: 100%;
-  min-height: var(--touch-target);
   padding: 0 16px;
-  border: var(--outline-width) solid var(--color-outline);
   border-radius: var(--radius-control);
-  background: var(--color-bg-soft);
   font-size: 24px;
   letter-spacing: 0.4em;
   text-align: center;
-}
-
-.pin-form__input[aria-invalid='true'] {
-  border-color: var(--color-danger);
 }
 
 /* Turnstile 위젯 자리. 위젯이 뜰 때 아래 내용이 밀리지 않게 높이를 잡아 둔다 */
@@ -299,18 +419,7 @@
   color: var(--color-danger);
 }
 
-/* 폼 화면 */
-.page--narrow {
-  max-width: calc(640px + var(--page-gutter) * 2);
-}
-
-.page__title {
-  margin-bottom: 32px;
-  font-size: var(--font-size-title);
-  font-weight: 700;
-  line-height: 1.3;
-}
-
+/* 작업물 폼 */
 .work-form {
   display: flex;
   flex-direction: column;
@@ -327,18 +436,19 @@
   font-weight: 700;
 }
 
+.field__label--sub {
+  margin-top: 4px;
+  font-size: var(--font-size-sub);
+}
+
 .field__hint {
   color: var(--color-text-sub);
   font-size: var(--font-size-sub);
 }
 
 .field__input {
-  width: 100%;
-  min-height: var(--touch-target);
   padding: 8px 14px;
-  border: var(--outline-width) solid var(--color-outline);
   border-radius: var(--radius-control);
-  background: var(--color-surface);
 }
 
 .field__input--textarea {
@@ -349,100 +459,6 @@
 .field__input--date {
   align-self: flex-start;
   width: auto;
-}
-
-.field__input[aria-invalid='true'] {
-  border-color: var(--color-danger);
-}
-
-.field__preview {
-  aspect-ratio: 16 / 10;
-  overflow: hidden;
-  border: var(--outline-width) solid var(--color-outline);
-  border-radius: var(--radius-card);
-  background: var(--color-bg-soft);
-}
-
-.field__preview img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-
-.work-form__actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-}
-
-.button:disabled {
-  cursor: not-allowed;
-  opacity: 0.6;
-  transform: none;
-  box-shadow: none;
-}
-
-.field__label--sub {
-  margin-top: 4px;
-  font-size: var(--font-size-sub);
-}
-
-/* 카테고리 필터. 모바일에서는 줄바꿈 없이 가로로 스크롤한다 */
-.category-filter {
-  margin-bottom: 24px;
-}
-
-.category-filter__list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.category-filter__button {
-  min-height: var(--touch-target);
-  padding: 0 18px;
-  border: var(--outline-width) solid var(--color-outline);
-  border-radius: 999px;
-  background: var(--color-surface);
-  color: var(--color-text);
-  font-weight: 700;
-  white-space: nowrap;
-  cursor: pointer;
-}
-
-.category-filter__button:hover {
-  background: var(--color-bg-soft);
-}
-
-.category-filter__button[aria-pressed='true'] {
-  background: var(--color-accent);
-  color: var(--color-on-accent);
-}
-
-@media (max-width: 639px) {
-  .category-filter {
-    margin-right: calc(var(--page-gutter) * -1);
-    margin-left: calc(var(--page-gutter) * -1);
-  }
-
-  .category-filter__list {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding: 0 var(--page-gutter) 4px;
-    scrollbar-width: none;
-  }
-
-  .category-filter__list::-webkit-scrollbar {
-    display: none;
-  }
-
-  .category-filter__list > li {
-    flex: none;
-  }
 }
 
 .field__preview-empty {
@@ -461,11 +477,37 @@
   gap: 8px;
 }
 
-/* 상세 페이지 */
-.page--detail {
-  max-width: calc(880px + var(--page-gutter) * 2);
+.work-form__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
 }
 
+/* 검색창 */
+.search-bar {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.search-bar__input {
+  padding: 8px 80px 8px 20px;
+  border-radius: 999px;
+}
+
+/* 브라우저 기본 지우기(x) 대신 아래 버튼을 쓴다 */
+.search-bar__input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.search-bar__clear {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+}
+
+/* 상세 페이지 */
 .back-link {
   display: inline-flex;
   align-items: center;
@@ -487,36 +529,7 @@
 }
 
 .work-detail__thumb {
-  display: block;
-  aspect-ratio: 16 / 10;
-  overflow: hidden;
   margin-bottom: 24px;
-  border: var(--outline-width) solid var(--color-outline);
-  border-radius: var(--radius-card);
-  background: var(--color-bg-soft);
-}
-
-.work-detail__thumb {
-  transition:
-    transform var(--duration-hover) ease-out,
-    box-shadow var(--duration-hover) ease-out;
-}
-
-.work-detail__thumb:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-hover);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .work-detail__thumb:hover {
-    transform: none;
-  }
-}
-
-.work-detail__thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 
 .work-detail__title {
@@ -540,69 +553,362 @@
   margin-top: 32px;
 }
 
-/* 위험한 작업 버튼. 상세의 "삭제"는 테두리만, 확인 창의 "삭제"는 채운다 */
-.button--danger-outline {
-  border-color: var(--color-danger);
-  color: var(--color-danger);
+/* 첫 페이지. 넓은 화면에서는 왼쪽에 소개와 목차를 고정하고 오른쪽만 스크롤한다.
+   좁은 화면에서는 위아래로 쌓고, 목차는 화면 위에 붙는 가로 버튼 줄이 된다 */
+.home {
+  padding-bottom: var(--section-gap);
 }
 
-.button--danger {
-  border-color: var(--color-danger);
-  background: var(--color-danger);
-  color: var(--color-on-danger);
+.home__intro {
+  padding-top: var(--section-gap);
 }
 
-.button--danger:hover,
-.button--danger-outline:hover {
-  box-shadow: 2px 2px 0 var(--color-danger);
+.home__name {
+  font-size: var(--font-size-hero);
+  font-weight: 800;
+  line-height: 1.2;
+  word-break: keep-all;
 }
 
-.dialog__message {
+.home__role {
+  margin-top: 12px;
+  font-size: var(--font-size-card-title);
   font-weight: 700;
   word-break: keep-all;
 }
 
-.dialog .dialog__actions {
-  gap: 8px;
-  margin-top: 24px;
+.home__tagline {
+  max-width: 22em;
+  margin-top: 16px;
+  color: var(--color-text-sub);
+  word-break: keep-all;
 }
 
-/* 검색창 */
-.search-bar {
-  position: relative;
-  margin-bottom: 16px;
+.home-section {
+  padding-top: var(--section-gap);
+  scroll-margin-top: var(--section-scroll-margin);
 }
 
-.search-bar__input {
-  width: 100%;
-  min-height: var(--touch-target);
-  padding: 8px 80px 8px 16px;
-  border: var(--outline-width) solid var(--color-outline);
-  border-radius: 999px;
-  background: var(--color-surface);
+.home-section:focus {
+  outline: none;
 }
 
-/* 브라우저 기본 지우기(x) 대신 아래 버튼을 쓴다 */
-.search-bar__input::-webkit-search-cancel-button {
-  -webkit-appearance: none;
-  appearance: none;
+/* 마지막 섹션도 목차를 눌렀을 때 화면 위까지 올라올 수 있게 높이를 확보한다 */
+.home__works > .home-section:last-child {
+  min-height: 70vh;
 }
 
-.search-bar__clear {
-  position: absolute;
-  top: 50%;
-  right: 8px;
-  transform: translateY(-50%);
-}
-
-/* 무한 스크롤. 끝 표시 요소가 화면 가까이 오면 다음 12건을 보여준다 */
-.list-sentinel {
-  height: 1px;
-}
-
-.list-end {
-  margin-top: var(--section-gap);
+.home-section__title {
+  margin-bottom: 24px;
   color: var(--color-text-sub);
   font-size: var(--font-size-sub);
-  text-align: center;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.home__works {
+  padding-top: var(--section-gap);
+}
+
+.home__works .home-section:first-of-type {
+  padding-top: 16px;
+}
+
+.about {
+  display: grid;
+  gap: 16px;
+  word-break: keep-all;
+}
+
+/* 경력 */
+.experience-list {
+  display: grid;
+  gap: 32px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.experience {
+  display: grid;
+  grid-template-columns: 9em minmax(0, 1fr);
+  gap: 16px;
+}
+
+.experience__period {
+  padding-top: 2px;
+  color: var(--color-text-sub);
+  font-size: var(--font-size-sub);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.experience__title {
+  font-size: var(--font-size-body);
+  font-weight: 700;
+  word-break: keep-all;
+}
+
+.experience__org {
+  color: var(--color-text-sub);
+  font-weight: 600;
+}
+
+.experience__description {
+  margin-top: 8px;
+  color: var(--color-text-sub);
+  word-break: keep-all;
+}
+
+.experience__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.experience__tags > li {
+  padding: 2px 12px;
+  border-radius: 999px;
+  background: var(--color-accent-weak);
+  color: var(--color-accent-text);
+  font-size: var(--font-size-sub);
+  font-weight: 600;
+}
+
+@media (max-width: 639px) {
+  .experience {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+  }
+}
+
+/* 카테고리 섹션 */
+.category-section__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  font-size: var(--font-size-card-title);
+  font-weight: 700;
+}
+
+.category-section__title::before {
+  content: '';
+  flex: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--tone-text);
+}
+
+.category-section__count {
+  padding: 0 10px;
+  border-radius: 999px;
+  background: var(--tone-bg);
+  color: var(--tone-text);
+  font-size: var(--font-size-sub);
+}
+
+.category-section__empty {
+  color: var(--color-text-sub);
+}
+
+.category-section__more {
+  display: flex;
+  margin: 24px auto 0;
+}
+
+/* 좁은 화면에서는 왼쪽 칸을 풀어서 목차가 페이지 전체에 걸쳐 위에 붙어 있게 한다 */
+@media (max-width: 1023px) {
+  .home__side {
+    display: contents;
+  }
+}
+
+/* 목차: 좁은 화면(기본)에서는 위에 붙는 가로 버튼 줄 */
+.section-nav {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  margin: 24px calc(var(--page-gutter) * -1) 0;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+
+.section-nav__list {
+  display: flex;
+  gap: 8px;
+  margin: 0;
+  padding: 0 var(--page-gutter);
+  overflow-x: auto;
+  list-style: none;
+  scrollbar-width: none;
+}
+
+.section-nav__list::-webkit-scrollbar {
+  display: none;
+}
+
+.section-nav__item {
+  flex: none;
+}
+
+/* 넓은 화면의 세로 목차에서만 보이는 묶음 이름 */
+.section-nav__group-label {
+  display: none;
+}
+
+.section-nav__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: var(--touch-target);
+  padding: 0 18px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-weight: 700;
+  white-space: nowrap;
+  text-decoration: none;
+  transition:
+    background-color var(--duration-hover) ease-out,
+    border-color var(--duration-hover) ease-out;
+}
+
+/* 카테고리에는 색 점을 찍는다. 소개, 경력은 카테고리가 아니라서 점이 없다 */
+.section-nav__link:not(.tone-all)::before {
+  content: '';
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--tone-text);
+}
+
+.section-nav__link:not(.tone-all) {
+  padding-left: 14px;
+}
+
+.section-nav__link:hover {
+  border-color: var(--tone-text);
+}
+
+.section-nav__link.tone-all:hover {
+  border-color: var(--color-accent-text);
+}
+
+.section-nav__link[aria-current='true'] {
+  border-color: var(--tone-bg);
+  background: var(--tone-bg);
+  color: var(--tone-text);
+}
+
+/* 넓은 화면: 왼쪽 고정 칸 + 세로 목차. 지금 보는 섹션은 앞의 선이 길어지고 진해진다 */
+@media (min-width: 1024px) {
+  .home {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 64px;
+    padding-bottom: 0;
+  }
+
+  .home__side {
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    max-height: 100vh;
+    padding-bottom: var(--section-gap);
+    overflow-y: auto;
+  }
+
+  .home__content {
+    padding-bottom: var(--section-gap);
+  }
+
+  .home .work-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .section-nav {
+    position: static;
+    margin: 48px 0 0;
+    padding: 0;
+    border: 0;
+    background: none;
+  }
+
+  .section-nav__list {
+    flex-direction: column;
+    gap: 0;
+    padding: 0;
+    overflow: visible;
+  }
+
+  .section-nav__item--group {
+    margin-top: 24px;
+  }
+
+  .section-nav__group-label {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--color-text-sub);
+    font-size: var(--font-size-sub);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+
+  .section-nav__link,
+  .section-nav__link:not(.tone-all) {
+    gap: 16px;
+    min-height: 40px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    color: var(--color-text-sub);
+    transition: color var(--duration-hover) ease-out;
+  }
+
+  /* 점 대신 선. 카테고리는 그 색, 소개와 경력은 포인트 컬러 */
+  .section-nav__link::before,
+  .section-nav__link:not(.tone-all)::before {
+    content: '';
+    width: 32px;
+    height: 2px;
+    border-radius: 1px;
+    background: var(--color-control-border);
+    transition:
+      width var(--duration-hover) ease-out,
+      background-color var(--duration-hover) ease-out;
+  }
+
+  .section-nav__link:hover,
+  .section-nav__link[aria-current='true'] {
+    background: none;
+    color: var(--color-text);
+  }
+
+  .section-nav__link:hover::before,
+  .section-nav__link[aria-current='true']::before {
+    width: 64px;
+    background: var(--tone-text);
+  }
+
+  .section-nav__link.tone-all:hover::before,
+  .section-nav__link.tone-all[aria-current='true']::before {
+    background: var(--color-accent-text);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-nav__link,
+  .section-nav__link::before {
+    transition: none;
+  }
 }
