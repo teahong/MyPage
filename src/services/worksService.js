@@ -29,3 +29,24 @@ export async function fetchAllWorks() {
   if (error) throw error;
   return data.map(toWork);
 }
+
+// id는 썸네일 경로와 맞추려고 호출하는 쪽에서 crypto.randomUUID()로 먼저 만든다.
+export async function createWork(id, values, thumbnail) {
+  const { data, error } = await supabase
+    .from('works')
+    .insert({
+      id,
+      title: values.title.trim(),
+      description: values.description.trim(),
+      category: values.category,
+      link_url: values.linkUrl.trim(),
+      thumbnail_url: thumbnail.url,
+      thumbnail_path: thumbnail.path,
+      date: values.date,
+    })
+    .select()
+    .single();
+
+  if (error) throw error;
+  return toWork(data);
+}
