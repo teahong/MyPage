@@ -566,3 +566,31 @@
   gap: 8px;
   margin-top: 24px;
 }
+
+/* 검색창 */
+.search-bar {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.search-bar__input {
+  width: 100%;
+  min-height: var(--touch-target);
+  padding: 8px 80px 8px 16px;
+  border: var(--outline-width) solid var(--color-outline);
+  border-radius: 999px;
+  background: var(--color-surface);
+}
+
+/* 브라우저 기본 지우기(x) 대신 아래 버튼을 쓴다 */
+.search-bar__input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.search-bar__clear {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+}
