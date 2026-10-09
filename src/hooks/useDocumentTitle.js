@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-export const SITE_NAME = '작업물 아카이브';
+export const SITE_NAME = '뽀글쌤';
 
 // title이 없으면 사이트 이름만 쓴다.
 export default function useDocumentTitle(title) {

@@ -4,7 +4,7 @@ import characterUrl from '../image/profile.png';
 export default function CharacterMessage({ message, role, children }) {
   return (
     <div className="character-message" role={role}>
-      <img className="character-message__image" src={characterUrl} alt="작업물 아카이브 캐릭터" />
+      <img className="character-message__image" src={characterUrl} alt="뽀글쌤 캐릭터" />
       <p className="character-message__text">{message}</p>
       {children}
     </div>

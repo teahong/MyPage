@@ -16,7 +16,7 @@ export default function Header() {
       <div className="container header__inner">
         <Link to="/" className="header__intro">
           <span className="header__avatar">
-            <img src={characterUrl} alt="작업물 아카이브 캐릭터" />
+            <img src={characterUrl} alt="뽀글쌤 캐릭터" />
           </span>
           <p className="header__greeting">{GREETING}</p>
         </Link>
