@@ -59,6 +59,9 @@ create table if not exists public.categories (
 -- 대소문자 무시 중복 금지
 create unique index if not exists categories_name_lower_key on public.categories (lower(name));
 
+-- 관리자가 정한 보여줄 순서. null이면 아직 정하지 않은 것(새 카테고리)으로 뒤에 온다.
+alter table public.categories add column if not exists sort_order integer;
+
 insert into public.categories (name, is_default) values
   ('발표 자료', true),
   ('소프트웨어', true),
@@ -85,7 +88,12 @@ create table if not exists public.works (
   updated_at      timestamptz not null default now()
 );
 
-create index if not exists works_date_created_at_idx on public.works (date desc, created_at desc);
+-- 관리자가 카테고리 안에서 정한 보여줄 순서. null이면 아직 정하지 않은 것(새 작업물)으로 맨 앞에 온다.
+alter table public.works add column if not exists sort_order integer;
+
+drop index if exists public.works_date_created_at_idx;
+create index if not exists works_order_idx
+  on public.works (sort_order asc nulls first, date desc, created_at desc);
 
 create or replace function public.set_updated_at()
 returns trigger
@@ -145,6 +153,52 @@ create policy "categories read" on public.categories
   for select to anon, authenticated using (true);
 create policy "categories admin write" on public.categories
   for all to authenticated using (public.is_admin()) with check (public.is_admin());
+
+-- 작업물 순서 저장. 한 카테고리의 작업물 id를 보여줄 순서대로 받아 sort_order를 1, 2, 3...으로 바꾼다.
+-- security invoker라 위 RLS가 그대로 적용된다(관리자가 아니면 0건). 바뀐 행 수를 돌려준다.
+create or replace function public.set_work_order(ordered_ids uuid[])
+returns integer
+language plpgsql
+security invoker
+set search_path = ''
+as $
+declare
+  changed integer;
+begin
+  update public.works as w
+     set sort_order = o.ord
+    from unnest(ordered_ids) with ordinality as o(id, ord)
+   where w.id = o.id;
+  get diagnostics changed = row_count;
+  return changed;
+end;
+$;
+
+revoke execute on function public.set_work_order(uuid[]) from public, anon;
+grant execute on function public.set_work_order(uuid[]) to authenticated;
+
+-- 카테고리 순서 저장. 이름을 보여줄 순서대로 받아 sort_order를 1, 2, 3...으로 바꾼다.
+-- security invoker라 RLS가 그대로 적용된다(관리자가 아니면 0건). 바뀐 행 수를 돌려준다.
+create or replace function public.set_category_order(ordered_names text[])
+returns integer
+language plpgsql
+security invoker
+set search_path = ''
+as $
+declare
+  changed integer;
+begin
+  update public.categories as c
+     set sort_order = o.ord
+    from unnest(ordered_names) with ordinality as o(name, ord)
+   where c.name = o.name;
+  get diagnostics changed = row_count;
+  return changed;
+end;
+$;
+
+revoke execute on function public.set_category_order(text[]) from public, anon;
+grant execute on function public.set_category_order(text[]) to authenticated;
 
 -- ─────────────────────────────────────────────
 -- 썸네일 Storage

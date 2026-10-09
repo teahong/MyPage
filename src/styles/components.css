@@ -3,16 +3,21 @@
   border-bottom: 1px solid var(--color-border);
 }
 
+/* 관리자 버튼이 많아 좁은 화면에서 안 들어가면 버튼 줄이 아래로 내려간다 */
 .header__inner {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 8px 16px;
   min-height: calc(var(--character-header) + 24px);
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
 
 .header__intro {
   display: flex;
+  flex: 1 1 14em;
   align-items: center;
   gap: 12px;
   min-width: 0;
@@ -50,6 +55,7 @@
 
 .header__actions {
   display: flex;
+  margin-left: auto;
   flex: none;
   align-items: center;
   gap: 8px;
@@ -284,7 +290,10 @@
   color: var(--color-on-danger);
 }
 
+/* 링크(a)로 써도 버튼과 똑같이 보이게 한다 */
 .text-button {
+  display: inline-flex;
+  align-items: center;
   min-height: var(--touch-target);
   padding: 0 8px;
   border: 0;
@@ -292,6 +301,7 @@
   color: var(--color-text-sub);
   font-size: var(--font-size-sub);
   font-weight: 600;
+  text-decoration: none;
   cursor: pointer;
 }
 
@@ -686,11 +696,19 @@
 }
 
 /* 카테고리 섹션 */
+.category-section__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
 .category-section__title {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 20px;
+  min-width: 0;
   font-size: var(--font-size-card-title);
   font-weight: 700;
 }
@@ -911,4 +929,141 @@
   .section-nav__link::before {
     transition: none;
   }
+}
+
+/* 작업물 순서 바꾸기 (관리자) */
+.order-list {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.order-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+}
+
+.order-item__rank {
+  flex: none;
+  width: 1.5em;
+  color: var(--color-text-sub);
+  font-size: var(--font-size-sub);
+  font-weight: 700;
+  text-align: center;
+}
+
+.order-item__thumb {
+  flex: none;
+  width: 64px;
+  aspect-ratio: 16 / 10;
+  border-radius: 8px;
+  background: var(--color-bg-soft);
+  object-fit: cover;
+}
+
+.order-item__text {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+}
+
+.order-item__title {
+  overflow: hidden;
+  font-weight: 700;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.order-item__date {
+  color: var(--color-text-sub);
+  font-size: var(--font-size-sub);
+}
+
+.order-item__actions {
+  display: flex;
+  flex: none;
+  gap: 4px;
+}
+
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--touch-target);
+  height: var(--touch-target);
+  border: 1px solid var(--color-control-border);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  font-size: var(--font-size-card-title);
+  cursor: pointer;
+}
+
+.icon-button:hover {
+  border-color: var(--color-accent-text);
+  color: var(--color-accent-text);
+}
+
+.icon-button[aria-disabled='true'] {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.icon-button[aria-disabled='true']:hover {
+  border-color: var(--color-control-border);
+  color: inherit;
+}
+
+.order-editor__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+/* 좁은 화면에서는 버튼을 제목 아래 줄로 내린다 */
+@media (max-width: 639px) {
+  .order-item {
+    flex-wrap: wrap;
+  }
+
+  .order-item__text {
+    flex-basis: 0;
+  }
+
+  .order-item__actions {
+    justify-content: flex-end;
+    width: 100%;
+  }
+}
+
+/* 누를 수 없는 상태(이유를 알려야 해서 disabled 대신 aria-disabled를 쓰는 버튼) */
+.button[aria-disabled='true'] {
+  opacity: 0.4;
+  cursor: default;
+  box-shadow: none;
+  transform: none;
+}
+
+/* 카테고리 관리 */
+.category-add {
+  display: grid;
+  gap: 8px;
+  margin-top: var(--section-gap);
+}
+
+.category-add__row {
+  display: flex;
+  gap: 8px;
+}
+
+.category-add__row .field__input {
+  flex: 1;
+  min-width: 0;
 }

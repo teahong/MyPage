@@ -28,7 +28,7 @@ function previewQuery(query) {
 // 목차를 누르거나 스크롤해서 섹션을 오간다. 지금 보는 섹션은 주소(?section=)에 담아
 // 상세에서 돌아오면 그 섹션부터 보여준다.
 export default function HomePage() {
-  const { works, status, reload } = useWorks();
+  const { works, status, reload, refresh } = useWorks();
   const { isAdmin } = useAuth();
   useDocumentTitle('');
   const categories = useCategories(); // null: 불러오는 중, []: 실패
@@ -160,6 +160,8 @@ export default function HomePage() {
                 tone={group.tone}
                 works={group.works}
                 categories={tones}
+                canReorder={isAdmin && !searching}
+                onReordered={refresh}
               />
             ))}
         </div>

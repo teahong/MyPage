@@ -1,13 +1,13 @@
 // 추가, 수정, 삭제 화면이 같이 쓰는 저장 순서.
 // 실패하면 화면 문구를 고를 수 있도록 code를 붙여 던진다:
-// category_duplicate | category | thumbnail | save | delete
+// category_duplicate | category | thumbnail | save | delete | order
 import resizeImage from '../utils/imageResize.js';
 import createTitleCard from '../utils/titleCard.js';
 import { NEW_CATEGORY } from '../utils/validators.js';
 import { createCategory } from './categoriesService.js';
 import { fetchLinkImage } from './linkImageService.js';
 import { deleteThumbnail, uploadThumbnail } from './storageService.js';
-import { createWork, deleteWork, updateWork } from './worksService.js';
+import { createWork, deleteWork, saveWorkOrder, updateWork } from './worksService.js';
 
 function fail(code, cause) {
   console.error(cause);
@@ -81,7 +81,8 @@ export async function saveWorkEdits(work, formValues, pickedFile) {
   }
 
   try {
-    await updateWork(work.id, values, thumbnail);
+    // 다른 카테고리로 옮기면 그 카테고리의 맨 위로 간다.
+    await updateWork(work.id, values, thumbnail, { resetOrder: values.category !== work.category });
   } catch (error) {
     if (thumbnail) removeQuietly(thumbnail.path);
     throw fail('save', error);
@@ -100,10 +101,20 @@ export async function removeWork(work) {
   if (work.thumbnailPath) removeQuietly(work.thumbnailPath);
 }
 
+// 한 카테고리의 작업물 순서. ids는 보여줄 순서대로.
+export async function saveCategoryOrder(ids) {
+  try {
+    await saveWorkOrder(ids);
+  } catch (error) {
+    throw fail('order', error);
+  }
+}
+
 export const SAVE_ERROR_MESSAGES = {
   category_duplicate: '이미 있는 카테고리예요. 목록에서 골라 주세요',
   category: '카테고리를 저장하지 못했어요. 다시 시도해 주세요',
   thumbnail: '썸네일을 올리지 못했어요. 다시 시도해 주세요',
   save: '저장하지 못했어요. 다시 시도해 주세요',
   delete: '삭제하지 못했어요. 다시 시도해 주세요',
+  order: '순서를 저장하지 못했어요. 다시 시도해 주세요',
 };

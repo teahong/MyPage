@@ -16,9 +16,14 @@ export default function useWorks() {
     }
   }, []);
 
+  // 화면을 "불러오는 중"으로 바꾸지 않고 목록만 새로 받는다 (순서 저장 뒤). 실패하면 던진다.
+  const refresh = useCallback(async () => {
+    setWorks(await fetchAllWorks());
+  }, []);
+
   useEffect(() => {
     load();
   }, [load]);
 
-  return { works, status, reload: load };
+  return { works, status, reload: load, refresh };
 }

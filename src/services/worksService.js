@@ -12,16 +12,19 @@ function toWork(row) {
     thumbnailUrl: row.thumbnail_url,
     thumbnailPath: row.thumbnail_path,
     date: row.date, // 'YYYY-MM-DD'
+    sortOrder: row.sort_order, // 관리자가 정한 순서. null이면 아직 정하지 않음
     createdAt: new Date(row.created_at),
     updatedAt: new Date(row.updated_at),
   };
 }
 
-// 날짜 최신순, 같으면 등록 시각 최신순.
+// 관리자가 정한 순서(sort_order)대로. 순서가 없는 작업물(새로 추가했거나 카테고리를 옮긴 것)이 먼저 오고,
+// 그 안에서는 날짜 최신순, 같으면 등록 시각 최신순.
 export async function fetchAllWorks() {
   const { data, error } = await supabase
     .from('works')
     .select('*')
+    .order('sort_order', { ascending: true, nullsFirst: true })
     .order('date', { ascending: false })
     .order('created_at', { ascending: false })
     .abortSignal(AbortSignal.timeout(FETCH_TIMEOUT_MS));
@@ -65,8 +68,8 @@ export async function fetchWork(id) {
   return data ? toWork(data) : null;
 }
 
-// thumbnail이 null이면 썸네일 칸은 그대로 둔다.
-export async function updateWork(id, values, thumbnail) {
+// thumbnail이 null이면 썸네일 칸은 그대로 둔다. resetOrder면 정해 둔 순서를 지운다(카테고리를 옮겼을 때).
+export async function updateWork(id, values, thumbnail, { resetOrder = false } = {}) {
   const changes = {
     title: values.title.trim(),
     description: values.description.trim(),
@@ -74,6 +77,7 @@ export async function updateWork(id, values, thumbnail) {
     link_url: values.linkUrl.trim(),
     date: values.date,
   };
+  if (resetOrder) changes.sort_order = null;
   if (thumbnail) {
     changes.thumbnail_url = thumbnail.url;
     changes.thumbnail_path = thumbnail.path;
@@ -82,6 +86,14 @@ export async function updateWork(id, values, thumbnail) {
 
   if (error) throw error;
   return toWork(data);
+}
+
+// 한 카테고리의 작업물 id를 보여줄 순서대로 받아 1, 2, 3...으로 저장한다.
+// 권한이 없으면 RLS 때문에 0건이 바뀌므로 바뀐 개수로 확인한다.
+export async function saveWorkOrder(ids) {
+  const { data, error } = await supabase.rpc('set_work_order', { ordered_ids: ids });
+  if (error) throw error;
+  if (data !== ids.length) throw new Error('순서가 저장된 작업물 수가 다름');
 }
 
 export async function deleteWork(id) {

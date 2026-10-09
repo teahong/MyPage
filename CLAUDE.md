@@ -42,7 +42,8 @@
 - 디자인 다듬기 (2026-10-09, 13단계 뒤): 굵은 먹색 테두리와 만화풍 그림자를 걷어내고 옅은 선(`--color-outline`), 입력칸, 버튼은 `--color-control-border`(대비 3:1 이상), 부드러운 그림자로 바꿨다.
 - 카테고리마다 다른 색 (2026-10-09 사용자 결정, 문서 5.1 "포인트 컬러 1개" 대체). 그림 속 색 7가지 `--category-1..7-bg/text`, 카테고리 목록 순서대로 배정(`utils/categoryTone.js`, 목록 불러오기 전에는 중립색 tone-0). 라벨은 `CategoryLabel`, 목차는 카테고리 색 선(넓은 화면) 또는 색 점 + 강조 시 그 색으로 채움(좁은 화면). 소개, 경력은 포인트 컬러.
 - 배경에 캐릭터를 흐리게 깐다 (2026-10-09 사용자 결정, 문서 5.1 "blur 배경 금지" 대체). `base.css`의 `body::before`, 오른쪽 아래 고정, 투명도와 흐림은 `--backdrop-character-*` 토큰.
-- 카테고리 목록은 `categoriesService.fetchCategories`가 한 번 불러와 재사용하고, 새 카테고리를 만들면 비운다. 화면에서는 `useCategories` 훅.
+- 카테고리 목록은 `categoriesService.fetchCategories`가 한 번 불러와 재사용하고, 카테고리를 만들거나 지우거나 순서를 바꾸면 비운다. 화면에서는 `useCategories` 훅.
+- 카테고리 관리 화면 `/admin/categories` (2026-10-09 사용자 결정): 헤더의 "카테고리"(관리자만)로 들어가 추가, 삭제, 순서 바꾸기를 한다. 추가와 삭제는 바로 저장하고, 순서는 "순서 저장"으로 `public.set_category_order(text[])`가 `categories.sort_order`에 저장한다. 순서 없는 카테고리(새로 만든 것)는 뒤에 온다. 작업물이 있는 카테고리는 지울 수 없다(외래키, 화면에서도 막음). 카테고리 색은 이 순서대로 정해져서 순서를 바꾸면 색도 바뀐다.
 - 포인트 컬러 파생 토큰: 크림 배경 위 글자는 `--color-accent-text`, 포인트 컬러로 채운 버튼 위 글자는 `--color-on-accent` (대비 4.5:1 확보).
 - 관리자 이메일: `.env`, DB의 `public.app_settings`(key `admin_email`), 대시보드 관리자 계정에 같은 값을 넣는다. `is_admin()`은 `app_settings`에서 읽는다(security definer). 저장소의 SQL에는 자리표시 문자열을 두고, 실행용은 `.env` 이메일을 채운 `supabase/schema.local.sql`(gitignore)로 만든다. `schema.sql`은 전체 재실행해도 저장된 이메일을 덮어쓰지 않는다. 메일을 보내지 않으므로 실제로 받는 주소일 필요는 없다.
 - DB 변경을 안내할 때는 필요한 SQL 조각만 주거나, 전체가 필요하면 `schema.local.sql`을 다시 만들어 준다.
@@ -51,7 +52,8 @@
 - 새 카테고리는 작업물을 저장할 때 같이 만든다 (카테고리 → 썸네일 → 작업물 순서).
 - `works.category`는 `categories.name` 외래키.
 - 새 작업물은 `crypto.randomUUID()`로 id를 먼저 만들어 썸네일 경로 `{id}-{timestamp}.{ext}`(버킷 `thumbnails`)와 행 id에 같이 쓴다.
-- 정렬(date desc, created_at desc)은 DB 쿼리에서 한다.
+- 정렬은 DB 쿼리에서 한다: `sort_order asc nulls first`, `date desc`, `created_at desc`.
+- 작업물 순서는 관리자가 카테고리마다 정한다 (2026-10-09 사용자 결정, 대표 작업물을 위에 두려고). 첫 페이지 카테고리 섹션의 "순서 바꾸기"(`WorkOrderEditor`, 관리자이고 검색 중이 아닐 때) → `public.set_work_order(uuid[])`가 그 카테고리 작업물의 `sort_order`를 1, 2, 3...으로 저장한다(security invoker, RLS 적용). 새 작업물과 다른 카테고리로 옮긴 작업물은 `sort_order`가 null이라 그 카테고리 맨 위에 온다.
 - 썸네일 리사이즈 결과: png는 png 유지(투명 배경), 그 외는 webp.
 - 썸네일은 필수가 아니다 (2026-10-09 사용자 결정, 문서 3.7 "썸네일 필수" 대체). 저장할 때 우선순위: 직접 올린 이미지 → 링크의 대표 이미지(og:image 등) → 제목 카드. 어느 경우든 리사이즈해서 우리 Storage에 올린다 (외부 이미지를 직접 걸지 않음). 폼에 "링크에서 가져오기"로 미리 볼 수 있다.
 - 링크 대표 이미지는 Edge Function `supabase/functions/fetch-og-image`가 가져온다 (브라우저는 CORS로 못 읽음). 관리자만 호출 가능(함수 안에서 `is_admin()` 확인), `--no-verify-jwt`로 배포. 내부망 주소 차단, HTML 앞 2MB만 읽음. YouTube는 서버 IP에서 페이지를 막아서(429) 영상 ID로 `i.ytimg.com` 썸네일을 바로 받는다. 배포: `npx supabase functions deploy fetch-og-image --project-ref ddfywsuhaalrapvumfnd --no-verify-jwt --use-api` (CLI 로그인은 사용자가 별도 터미널에서 `npx.cmd supabase login`).

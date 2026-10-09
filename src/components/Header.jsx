@@ -26,6 +26,9 @@ export default function Header() {
               <Link to="/admin/new" className="button button--primary">
                 추가
               </Link>
+              <Link to="/admin/categories" className="text-button">
+                카테고리
+              </Link>
               <button type="button" className="text-button" onClick={signOut}>
                 로그아웃
               </button>
