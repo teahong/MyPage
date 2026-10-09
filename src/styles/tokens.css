@@ -1,17 +1,21 @@
+/* 색상은 캐릭터 그림(src/image/profile.png)에서 뽑았다.
+   크림색 종이 배경, 칠판 청록, 굵은 검은 외곽선이 기준이다. */
 :root {
   /* 색상 */
-  --color-bg: #ffffff;
-  --color-bg-soft: #f6f7f8;
-  --color-text: #1b1d1f;
-  --color-text-sub: #6b7280;
-  --color-border: #e5e7eb;
-  --color-accent: #ff7a45; /* 임시. 캐릭터 확인 후 확정 */
-  --color-accent-weak: #fff1ea; /* 임시 */
-  /* 포인트 컬러를 흰 배경 위 글자색(링크 등)으로 쓸 때. 같은 색상의 진한 단계로 대비 4.5:1 이상 확보 */
-  --color-accent-text: #b54513; /* 임시 */
-  /* 포인트 컬러로 채운 버튼 위 글자색 */
-  --color-on-accent: #1b1d1f;
-  --color-danger: #d92d20;
+  --color-bg: #f8eddc; /* 그림 배경의 크림색 종이 */
+  --color-bg-soft: #f1f5dc; /* 셔츠의 연두빛 크림. 입력칸 배경 */
+  --color-surface: #fffbf3; /* 대화창, 버튼처럼 배경 위에 올라오는 면 */
+  --color-text: #1a1a18; /* 외곽선 먹색 */
+  --color-text-sub: #6b6257; /* 크림 배경 위 대비 5.17:1 */
+  --color-border: #e2d4bc; /* 옅은 구분선 */
+  --color-outline: #1a1a18; /* 만화풍 굵은 외곽선 */
+  --color-accent: #66b3b4; /* 칠판 청록 */
+  --color-accent-weak: #d8eeee;
+  /* 포인트 컬러를 크림 배경 위 글자색(링크 등)으로 쓸 때. 대비 5.37:1 */
+  --color-accent-text: #1e6b6c;
+  /* 포인트 컬러로 채운 버튼 위 글자색. 대비 7.2:1 */
+  --color-on-accent: #1a1a18;
+  --color-danger: #b42335; /* 크림 배경 위 대비 5.61:1 */
 
   /* 글꼴 */
   --font-family: 'Pretendard Variable', Pretendard, system-ui, sans-serif;
@@ -27,16 +31,19 @@
   --card-gap: 24px;
   --section-gap: 48px;
   --radius-card: 16px;
+  --radius-control: 12px;
+  --outline-width: 2px;
   --touch-target: 44px;
   --character-header: 56px;
   --character-message: 160px;
 
-  /* 그림자. 카드 호버와 대화창에만 쓴다 */
-  --shadow-hover: 0 8px 20px rgb(27 29 31 / 0.08);
-  --shadow-dialog: 0 16px 40px rgb(27 29 31 / 0.16);
+  /* 그림자. 번지지 않는 만화풍 그림자를 카드 호버, 버튼, 대화창에만 쓴다 */
+  --shadow-hover: 4px 4px 0 var(--color-outline);
+  --shadow-control: 2px 2px 0 var(--color-outline);
+  --shadow-dialog: 6px 6px 0 var(--color-outline);
 
   /* 대화창 뒤 배경 */
-  --color-backdrop: rgb(27 29 31 / 0.4);
+  --color-backdrop: rgb(26 26 24 / 0.45);
 
   /* 움직임 */
   --duration-hover: 150ms;

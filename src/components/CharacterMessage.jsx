@@ -1,4 +1,4 @@
-import characterUrl from '../assets/character.svg';
+import characterUrl from '../image/profile.png';
 
 // 로딩, 빈 화면, 오류 화면에서 캐릭터와 짧은 문구를 가운데에 보여준다.
 export default function CharacterMessage({ message, role, children }) {

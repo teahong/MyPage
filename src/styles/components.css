@@ -1,6 +1,6 @@
 /* 헤더 */
 .header {
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: var(--outline-width) solid var(--color-outline);
 }
 
 .header__inner {
@@ -13,22 +13,37 @@
 
 .header__intro {
   display: flex;
-  color: inherit;
-  text-decoration: none;
   align-items: center;
   gap: 12px;
   min-width: 0;
+  color: inherit;
+  text-decoration: none;
 }
 
-.header__character {
+/* 세로로 긴 그림에서 얼굴 부분만 확대해 동그랗게 보여준다.
+   머리카락을 포함한 얼굴은 그림 높이의 약 60%, 중심은 (43%, 31%) 지점이다. */
+.header__avatar {
+  position: relative;
   flex: none;
-  width: auto;
+  width: var(--character-header);
   height: var(--character-header);
+  overflow: hidden;
+  border: var(--outline-width) solid var(--color-outline);
+  border-radius: 50%;
+  background: var(--color-bg);
+}
+
+.header__avatar img {
+  position: absolute;
+  top: 0;
+  left: -1%;
+  width: 120%;
+  max-width: none;
 }
 
 .header__greeting {
   font-size: var(--font-size-body);
-  font-weight: 600;
+  font-weight: 700;
   word-break: keep-all;
 }
 
@@ -67,32 +82,31 @@
   }
 }
 
-/* 작업물 카드 */
+/* 작업물 카드. 썸네일이 주인공이라 카드 자체에는 면을 깔지 않고 썸네일에만 외곽선을 두른다 */
 .work-card {
   height: 100%;
-  border-radius: var(--radius-card);
-  background: var(--color-bg);
-  transition:
-    transform var(--duration-hover) ease-out,
-    box-shadow var(--duration-hover) ease-out;
-}
-
-.work-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-hover);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .work-card:hover {
-    transform: none;
-  }
 }
 
 .work-card__thumb {
   aspect-ratio: 16 / 10;
   overflow: hidden;
+  border: var(--outline-width) solid var(--color-outline);
   border-radius: var(--radius-card);
   background: var(--color-bg-soft);
+  transition:
+    transform var(--duration-hover) ease-out,
+    box-shadow var(--duration-hover) ease-out;
+}
+
+.work-card:hover .work-card__thumb {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work-card:hover .work-card__thumb {
+    transform: none;
+  }
 }
 
 .work-card__thumb img {
@@ -122,11 +136,11 @@
 }
 
 .work-card__category {
-  padding: 2px 8px;
+  padding: 1px 8px;
   border-radius: 999px;
   background: var(--color-accent-weak);
   color: var(--color-accent-text);
-  font-weight: 600;
+  font-weight: 700;
 }
 
 /* 버튼 */
@@ -137,18 +151,57 @@
   min-width: var(--touch-target);
   min-height: var(--touch-target);
   padding: 0 20px;
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
-  background: var(--color-bg);
+  border: var(--outline-width) solid var(--color-outline);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform var(--duration-hover) ease-out,
+    box-shadow var(--duration-hover) ease-out;
+}
+
+.button:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-control);
+}
+
+.button:active {
+  transform: none;
+  box-shadow: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button:hover {
+    transform: none;
+  }
+}
+
+.button--primary {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.text-button {
+  min-height: var(--touch-target);
+  padding: 0 8px;
+  border: 0;
+  background: none;
+  color: var(--color-text-sub);
+  font-size: var(--font-size-sub);
   font-weight: 600;
   cursor: pointer;
 }
 
-.button:hover {
-  background: var(--color-bg-soft);
+.text-button:hover {
+  color: var(--color-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
-/* 캐릭터 안내 (로딩, 빈 화면, 오류) */
+/* 캐릭터 안내 (로딩, 빈 화면, 오류). 그림을 만화 칸처럼 테두리 안에 넣는다 */
 .character-message {
   display: flex;
   flex-direction: column;
@@ -161,50 +214,22 @@
 .character-message__image {
   width: auto;
   height: var(--character-message);
+  border: var(--outline-width) solid var(--color-outline);
+  border-radius: var(--radius-card);
 }
 
 .character-message__text {
   color: var(--color-text-sub);
-}
-
-a.button {
-  text-decoration: none;
-  color: var(--color-text);
-}
-
-.button--primary,
-a.button--primary {
-  border-color: var(--color-accent);
-  background: var(--color-accent);
-  color: var(--color-on-accent);
-}
-
-.button--primary:hover {
-  background: var(--color-accent);
-  filter: brightness(0.95);
-}
-
-.text-button {
-  min-height: var(--touch-target);
-  padding: 0 8px;
-  border: 0;
-  background: none;
-  color: var(--color-text-sub);
-  font-size: var(--font-size-sub);
-  cursor: pointer;
-}
-
-.text-button:hover {
-  color: var(--color-text);
+  font-weight: 600;
 }
 
 /* 대화창 */
 .dialog {
   width: min(360px, calc(100% - var(--page-gutter) * 2));
   padding: 24px;
-  border: 0;
+  border: var(--outline-width) solid var(--color-outline);
   border-radius: var(--radius-card);
-  background: var(--color-bg);
+  background: var(--color-surface);
   color: var(--color-text);
   box-shadow: var(--shadow-dialog);
 }
@@ -239,8 +264,8 @@ a.button--primary {
   width: 100%;
   min-height: var(--touch-target);
   padding: 0 16px;
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
+  border: var(--outline-width) solid var(--color-outline);
+  border-radius: var(--radius-control);
   background: var(--color-bg-soft);
   font-size: 24px;
   letter-spacing: 0.4em;

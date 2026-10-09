@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
-import characterUrl from '../assets/character.svg';
+import characterUrl from '../image/profile.png';
 import useAuth from '../hooks/useAuth.js';
 import { signOut } from '../services/authService.js';
 import PinDialog from './PinDialog.jsx';
@@ -15,7 +15,9 @@ export default function Header() {
     <header className="header">
       <div className="container header__inner">
         <Link to="/" className="header__intro">
-          <img className="header__character" src={characterUrl} alt="작업물 아카이브 캐릭터" />
+          <span className="header__avatar">
+            <img src={characterUrl} alt="작업물 아카이브 캐릭터" />
+          </span>
           <p className="header__greeting">{GREETING}</p>
         </Link>
         <div className="header__actions">

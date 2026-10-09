@@ -1,7 +1,0 @@
-<!-- 자리표시용 캐릭터. 실제 이미지를 받으면 character.png로 교체한다. -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
-  <ellipse cx="60" cy="66" rx="48" ry="44" fill="#FF7A45"/>
-  <circle cx="44" cy="60" r="6" fill="#1B1D1F"/>
-  <circle cx="76" cy="60" r="6" fill="#1B1D1F"/>
-  <path d="M50 78 Q60 86 70 78" fill="none" stroke="#1B1D1F" stroke-width="4" stroke-linecap="round"/>
-</svg>
