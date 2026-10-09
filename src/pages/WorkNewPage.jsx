@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import CharacterMessage from '../components/CharacterMessage.jsx';
+import useDocumentTitle from '../hooks/useDocumentTitle.js';
 import WorkForm from '../components/WorkForm.jsx';
 import { createCategory, fetchCategories } from '../services/categoriesService.js';
 import { fetchLinkImage } from '../services/linkImageService.js';
@@ -30,6 +31,7 @@ const EMPTY_VALUES = { title: '', description: '', category: '', newCategory: ''
 
 export default function WorkNewPage() {
   const navigate = useNavigate();
+  useDocumentTitle('작업물 추가');
   const [categories, setCategories] = useState(null);
   const [loadFailed, setLoadFailed] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -73,8 +75,7 @@ export default function WorkNewPage() {
     try {
       thumbnail = await uploadThumbnail(id, await prepareThumbnail(values, pickedFile));
       await createWork(id, values, thumbnail);
-      // 상세 페이지(/work/:id)는 10단계에서 만든다. 그때 저장 후 이동할 곳을 상세로 바꾼다.
-      navigate('/');
+      navigate(`/work/${id}`, { replace: true });
     } catch (error) {
       console.error(error);
       if (thumbnail) {

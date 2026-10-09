@@ -4,12 +4,14 @@ import CategoryFilter from '../components/CategoryFilter.jsx';
 import CharacterMessage from '../components/CharacterMessage.jsx';
 import WorkGrid from '../components/WorkGrid.jsx';
 import useAuth from '../hooks/useAuth.js';
+import useDocumentTitle from '../hooks/useDocumentTitle.js';
 import useWorks from '../hooks/useWorks.js';
 import { fetchCategories } from '../services/categoriesService.js';
 
 export default function HomePage() {
   const { works, status, reload } = useWorks();
   const { isAdmin } = useAuth();
+  useDocumentTitle('');
   const [categories, setCategories] = useState(null); // null: 불러오는 중
   const [searchParams, setSearchParams] = useSearchParams();
 

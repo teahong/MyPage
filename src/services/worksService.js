@@ -50,3 +50,17 @@ export async function createWork(id, values, thumbnail) {
   if (error) throw error;
   return toWork(data);
 }
+
+// 없으면 null. id 형식이 잘못된 경우(uuid 아님)도 없는 것으로 본다.
+export async function fetchWork(id) {
+  if (!/^[0-9a-f-]{36}$/i.test(id)) return null;
+  const { data, error } = await supabase
+    .from('works')
+    .select('*')
+    .eq('id', id)
+    .maybeSingle()
+    .abortSignal(AbortSignal.timeout(FETCH_TIMEOUT_MS));
+
+  if (error) throw error;
+  return data ? toWork(data) : null;
+}
