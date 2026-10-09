@@ -16,6 +16,7 @@
   /* 포인트 컬러로 채운 버튼 위 글자색. 대비 7.2:1 */
   --color-on-accent: #1a1a18;
   --color-danger: #b42335; /* 크림 배경 위 대비 5.61:1 */
+  --color-on-danger: #fffbf3; /* 위험 색으로 채운 버튼 위 글자색 */
 
   /* 썸네일이 없을 때 만드는 제목 카드 (utils/titleCard.js). 글자 대비 4.5:1 이상 */
   --cover-1-bg: #66b3b4; /* 칠판 청록 */

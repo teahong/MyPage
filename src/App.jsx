@@ -5,6 +5,7 @@ import ScrollToTop from './components/ScrollToTop.jsx';
 import HomePage from './pages/HomePage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 import WorkDetailPage from './pages/WorkDetailPage.jsx';
+import WorkEditPage from './pages/WorkEditPage.jsx';
 import WorkNewPage from './pages/WorkNewPage.jsx';
 
 export default function App() {
@@ -20,6 +21,14 @@ export default function App() {
           element={
             <AdminRoute>
               <WorkNewPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/edit/:id"
+          element={
+            <AdminRoute>
+              <WorkEditPage />
             </AdminRoute>
           }
         />

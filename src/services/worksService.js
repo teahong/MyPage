@@ -64,3 +64,29 @@ export async function fetchWork(id) {
   if (error) throw error;
   return data ? toWork(data) : null;
 }
+
+// thumbnail이 null이면 썸네일 칸은 그대로 둔다.
+export async function updateWork(id, values, thumbnail) {
+  const changes = {
+    title: values.title.trim(),
+    description: values.description.trim(),
+    category: values.category,
+    link_url: values.linkUrl.trim(),
+    date: values.date,
+  };
+  if (thumbnail) {
+    changes.thumbnail_url = thumbnail.url;
+    changes.thumbnail_path = thumbnail.path;
+  }
+  const { data, error } = await supabase.from('works').update(changes).eq('id', id).select().single();
+
+  if (error) throw error;
+  return toWork(data);
+}
+
+export async function deleteWork(id) {
+  // 권한이 없으면 RLS 때문에 오류 없이 0건이 지워진다. 그래서 지워진 행을 돌려받아 확인한다.
+  const { data, error } = await supabase.from('works').delete().eq('id', id).select('id');
+  if (error) throw error;
+  if (data.length === 0) throw new Error('삭제된 작업물이 없음');
+}

@@ -1,13 +1,19 @@
 import { useEffect, useState } from 'react';
-import { Link, useLocation, useParams } from 'react-router';
+import { Link, useLocation, useNavigate, useParams } from 'react-router';
 import CharacterMessage from '../components/CharacterMessage.jsx';
+import DeleteWorkDialog from '../components/DeleteWorkDialog.jsx';
+import useAuth from '../hooks/useAuth.js';
 import useDocumentTitle from '../hooks/useDocumentTitle.js';
+import { SAVE_ERROR_MESSAGES, removeWork } from '../services/workActions.js';
 import { fetchWork } from '../services/worksService.js';
 import formatDate from '../utils/formatDate.js';
 
 export default function WorkDetailPage() {
   const { id } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
+  const { isAdmin } = useAuth();
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const [work, setWork] = useState(null);
   const [status, setStatus] = useState('loading'); // loading | ready | missing | error
   const [attempt, setAttempt] = useState(0);
@@ -34,6 +40,16 @@ export default function WorkDetailPage() {
 
   // 목록에서 들어왔으면 그때의 검색어, 필터로 돌아간다.
   const listUrl = `/${location.state?.listSearch ?? ''}`;
+
+  // DeleteWorkDialog가 PIN을 다시 확인한 뒤 부른다.
+  async function handleDelete() {
+    try {
+      await removeWork(work);
+    } catch {
+      throw new Error(SAVE_ERROR_MESSAGES.delete);
+    }
+    navigate(listUrl, { replace: true });
+  }
 
   if (status === 'loading') {
     return (
@@ -94,8 +110,21 @@ export default function WorkDetailPage() {
           <a className="button button--primary" href={work.linkUrl} target="_blank" rel="noopener noreferrer">
             작업물 열기
           </a>
+          {isAdmin && (
+            <>
+              <Link to={`/admin/edit/${work.id}`} state={location.state} className="button">
+                수정
+              </Link>
+              <button type="button" className="button button--danger-outline" onClick={() => setConfirmOpen(true)}>
+                삭제
+              </button>
+            </>
+          )}
         </div>
       </article>
+      {confirmOpen && (
+        <DeleteWorkDialog onDelete={handleDelete} onCancel={() => setConfirmOpen(false)} />
+      )}
     </main>
   );
 }

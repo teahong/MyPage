@@ -1,21 +1,46 @@
 -- 작업물 아카이브 스키마
 -- Supabase 대시보드 > SQL Editor에 전체를 붙여넣고 Run 한다.
--- 실행 전에 아래 '관리자이메일@gmail.com'을 실제 관리자 이메일로 바꾼다 (1곳).
 -- 여러 번 실행해도 안전하도록 작성했다.
+--
+-- 처음 실행할 때만: 아래 app_settings의 '관리자이메일@gmail.com'을 실제 관리자 이메일로 바꾼다 (1곳).
+-- 이미 저장된 관리자 이메일은 다시 실행해도 덮어쓰지 않는다.
+-- 관리자 이메일을 바꾸려면 이 줄만 따로 실행한다:
+--   update public.app_settings set value = '새이메일' where key = 'admin_email';
+
+-- ─────────────────────────────────────────────
+-- 설정 (관리자 이메일)
+-- 누구도 직접 읽거나 쓸 수 없다. is_admin()만 읽는다.
+-- ─────────────────────────────────────────────
+create table if not exists public.app_settings (
+  key    text primary key,
+  value  text not null
+);
+
+alter table public.app_settings enable row level security;
+revoke all on public.app_settings from anon, authenticated;
+
+insert into public.app_settings (key, value) values
+  ('admin_email', '관리자이메일@gmail.com')
+on conflict (key) do nothing;
 
 -- ─────────────────────────────────────────────
 -- 관리자 판별
 -- 읽기는 누구나, 쓰기는 이 함수가 true인 사용자만. (문서 4.3 Security Rules 대체)
 -- 관리자는 이메일 + 6자리 PIN(비밀번호)으로 로그인한다.
--- 대시보드에서 직접 만든 관리자 계정이고 이메일이 일치할 때만 true.
+-- 대시보드에서 직접 만든 관리자 계정이고 이메일이 app_settings와 일치할 때만 true.
+-- security definer: 호출자 권한으로는 app_settings를 읽을 수 없어서 함수 소유자 권한으로 읽는다.
 -- ─────────────────────────────────────────────
 create or replace function public.is_admin()
 returns boolean
 language sql
 stable
+security definer
+set search_path = ''
 as $$
   select coalesce(
-    lower(auth.jwt() ->> 'email') = lower('관리자이메일@gmail.com')
+    lower(auth.jwt() ->> 'email') = (
+      select lower(value) from public.app_settings where key = 'admin_email'
+    )
       and auth.jwt() -> 'app_metadata' ->> 'provider' = 'email',
     false
   );
@@ -92,6 +117,27 @@ create policy "works read" on public.works
   for select to anon, authenticated using (true);
 create policy "works admin write" on public.works
   for all to authenticated using (public.is_admin()) with check (public.is_admin());
+
+-- 작업물 삭제는 최근 5분 안에 PIN(비밀번호)으로 인증한 경우에만 허용한다.
+-- 로그인 토큰의 amr(인증 방법과 시각)을 본다. 앱은 삭제 직전에 PIN과 로봇 확인으로 다시 로그인한다.
+-- restrictive 정책이라 위의 "works admin write"와 AND로 묶인다.
+create or replace function public.has_recent_pin_auth()
+returns boolean
+language sql
+stable
+as $$
+  select exists (
+    select 1
+    from jsonb_array_elements(coalesce(auth.jwt() -> 'amr', '[]'::jsonb)) as m
+    where m ->> 'method' = 'password'
+      and to_timestamp((m ->> 'timestamp')::double precision) > now() - interval '5 minutes'
+  );
+$$;
+
+drop policy if exists "works delete needs recent pin" on public.works;
+create policy "works delete needs recent pin" on public.works
+  as restrictive for delete to authenticated
+  using (public.has_recent_pin_auth());
 
 drop policy if exists "categories read" on public.categories;
 drop policy if exists "categories admin write" on public.categories;

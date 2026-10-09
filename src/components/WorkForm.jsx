@@ -25,6 +25,7 @@ export default function WorkForm({
   submitError,
   onSubmit,
   cancelTo,
+  cancelState,
 }) {
   const [values, setValues] = useState(initialValues);
   // { file, source: 'upload' | 'link' } 또는 null(자동)
@@ -220,7 +221,11 @@ export default function WorkForm({
         <span id="work-thumbnail-label" className="field__label">
           썸네일
         </span>
-        <p className="field__hint">비워 두면 링크의 대표 이미지나 제목 카드를 넣어요</p>
+        <p className="field__hint">
+          {initialThumbnailUrl
+            ? '새로 고르지 않으면 지금 썸네일을 그대로 써요'
+            : '비워 두면 링크의 대표 이미지나 제목 카드를 넣어요'}
+        </p>
         <div className="field__preview">
           {previewUrl ? (
             <img src={previewUrl} alt="썸네일 미리보기" />
@@ -289,7 +294,7 @@ export default function WorkForm({
       )}
 
       <div className="work-form__actions">
-        <Link to={cancelTo} className="button">
+        <Link to={cancelTo} state={cancelState} className="button">
           취소
         </Link>
         <button type="submit" className="button button--primary" disabled={submitting}>

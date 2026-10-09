@@ -539,3 +539,30 @@
   gap: 8px;
   margin-top: 32px;
 }
+
+/* 위험한 작업 버튼. 상세의 "삭제"는 테두리만, 확인 창의 "삭제"는 채운다 */
+.button--danger-outline {
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+.button--danger {
+  border-color: var(--color-danger);
+  background: var(--color-danger);
+  color: var(--color-on-danger);
+}
+
+.button--danger:hover,
+.button--danger-outline:hover {
+  box-shadow: 2px 2px 0 var(--color-danger);
+}
+
+.dialog__message {
+  font-weight: 700;
+  word-break: keep-all;
+}
+
+.dialog .dialog__actions {
+  gap: 8px;
+  margin-top: 24px;
+}

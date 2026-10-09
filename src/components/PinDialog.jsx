@@ -1,16 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { signInWithPin } from '../services/authService.js';
+import { PIN_ERROR_MESSAGES, PIN_LENGTH } from './pinMessages.js';
 import TurnstileWidget from './TurnstileWidget.jsx';
-
-const PIN_LENGTH = 6;
-
-const ERROR_MESSAGES = {
-  wrong: 'PIN이 맞지 않아요. 다시 입력해 주세요',
-  rate_limit: '시도가 너무 많아요. 잠시 후 다시 시도해 주세요',
-  captcha: '로봇 확인에 실패했어요. 다시 시도해 주세요',
-  unknown: '로그인하지 못했어요. 다시 시도해 주세요',
-  widget: '로봇 확인을 불러오지 못했어요. 새로고침해 주세요',
-};
 
 // 열릴 때만 렌더링한다. 6자리를 다 입력하고 Turnstile 토큰이 있으면 바로 로그인을 시도한다.
 export default function PinDialog({ onClose }) {
@@ -36,7 +27,7 @@ export default function PinDialog({ onClose }) {
     signInWithPin(pin, token)
       .then(onClose)
       .catch((err) => {
-        setErrorCode(err.code in ERROR_MESSAGES ? err.code : 'unknown');
+        setErrorCode(err.code in PIN_ERROR_MESSAGES ? err.code : 'unknown');
         setPin('');
         turnstileRef.current.reset();
         setSubmitting(false);
@@ -53,7 +44,7 @@ export default function PinDialog({ onClose }) {
     onClose();
   }
 
-  const error = errorCode && ERROR_MESSAGES[errorCode];
+  const error = errorCode && PIN_ERROR_MESSAGES[errorCode];
   const waitingForCheck = pin.length === PIN_LENGTH && !token && !submitting;
 
   return (

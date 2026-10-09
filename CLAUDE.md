@@ -24,6 +24,7 @@
 - 헤더 "관리자 로그인" → PIN 입력 창(숫자 6자리, `inputMode="numeric"`, `autocomplete="current-password"`). 6자리를 다 입력하면 바로 로그인 시도.
 - 오류 문구: 틀림 "PIN이 맞지 않아요. 다시 입력해 주세요" / 횟수 제한 "시도가 너무 많아요. 잠시 후 다시 시도해 주세요".
 - 로그인 상태는 Supabase가 브라우저에 보관해 새로고침해도 유지된다.
+- 작업물 삭제 전에 PIN을 다시 받는다 (2026-10-09 사용자 결정). `DeleteWorkDialog`가 PIN과 Turnstile로 `signInWithPassword`를 다시 호출한 뒤 삭제한다. DB도 restrictive 정책 "works delete needs recent pin"과 `public.has_recent_pin_auth()`로 토큰의 `amr`에 최근 5분 안의 password 인증이 있을 때만 삭제를 허용한다.
 
 ## 구조 원칙 (문서 2.2)
 - Supabase 호출은 `src/services/`에만 둔다.
@@ -40,7 +41,8 @@
 - 디자인 기준은 캐릭터 그림의 색과 화풍 (2026-10-09 사용자 결정): 크림색 종이 배경 `#F8EDDC`, 포인트 컬러는 칠판 청록 `#66B3B4`, 먹색 굵은 외곽선(`--color-outline`, 2px)과 번지지 않는 만화풍 그림자. 값은 `tokens.css` 주석에 출처와 대비 비율을 적어 둔다.
 - 디자인 다듬기는 13단계(무한 스크롤) 뒤, 14단계 전에 따로 한다 (2026-10-09 사용자 결정). 사용자 의견: 검정 테두리 때문에 촌스러워 보인다. 그때까지 새 화면도 토큰만 써서 나중에 토큰 교체로 바꿀 수 있게 한다.
 - 포인트 컬러 파생 토큰: 크림 배경 위 글자는 `--color-accent-text`, 포인트 컬러로 채운 버튼 위 글자는 `--color-on-accent` (대비 4.5:1 확보).
-- 관리자 이메일: `.env`, `schema.sql`의 `is_admin()`, 대시보드 관리자 계정에 같은 값을 넣는다. 저장소의 SQL에는 자리표시 문자열을 둔다. 메일을 보내지 않으므로 실제로 받는 주소일 필요는 없다.
+- 관리자 이메일: `.env`, DB의 `public.app_settings`(key `admin_email`), 대시보드 관리자 계정에 같은 값을 넣는다. `is_admin()`은 `app_settings`에서 읽는다(security definer). 저장소의 SQL에는 자리표시 문자열을 두고, 실행용은 `.env` 이메일을 채운 `supabase/schema.local.sql`(gitignore)로 만든다. `schema.sql`은 전체 재실행해도 저장된 이메일을 덮어쓰지 않는다. 메일을 보내지 않으므로 실제로 받는 주소일 필요는 없다.
+- DB 변경을 안내할 때는 필요한 SQL 조각만 주거나, 전체가 필요하면 `schema.local.sql`을 다시 만들어 준다.
 - 카테고리: `name`이 기본키. 대소문자 무시 중복은 DB 유니크 인덱스(`lower(name)`)가 막는다. 기본 3개는 `schema.sql`에서 미리 넣는다.
 - 기본 카테고리는 "발표 자료", "소프트웨어", "출판물" (2026-10-09 사용자 결정. 문서의 "앱"→"소프트웨어", "웹사이트"→"출판물").
 - 새 카테고리는 작업물을 저장할 때 같이 만든다 (카테고리 → 썸네일 → 작업물 순서).
